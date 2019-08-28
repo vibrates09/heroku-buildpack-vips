@@ -2,6 +2,8 @@ FROM heroku/heroku:18
 
 ARG VIPS_VERSION
 
+ENV DEBIAN_FRONTEND noninteractive
+
 # useful build tools ... we need gtk-doc to build orc, since they don't ship
 # pre-baked tarballs
 RUN apt-get update && apt-get install -y \
@@ -30,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 	libjpeg-dev \
 	libtiff5-dev \
 	libexif-dev \
+	libwebp-dev \
 	liblcms2-dev \
 	libxml2-dev \
 	libfftw3-dev \

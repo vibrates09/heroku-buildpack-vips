@@ -10,6 +10,7 @@ support via poppler. In order to use this buildpack, you must install these pack
 - libglib2.0-0
 - libglib2.0-dev
 - libpoppler-glib8
+- libwebp-dev
 
 The easiest way to do this is using the heroku apt buildpack.
 
@@ -27,7 +28,7 @@ Heroku buildpack with [libvips](https://github.com/jcupitt/libvips) installed.
 Add this buildpack to your app:
 
 ```
-https://github.com/brandoncc/heroku-buildpack-vips
+https://github.com/machinio/heroku-buildpack-vips
 ```
 
 ## Build script
