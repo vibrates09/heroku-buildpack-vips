@@ -1,6 +1,6 @@
 FROM heroku/heroku:18
 
-ENV VIPS_VERSION=8.8.1
+ENV VIPS_VERSION=8.8.2
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -88,15 +88,14 @@ RUN cd /usr/src \
       && make \
       && make install
 
-ARG WEBP_VERSION=0.6.1
+ARG WEBP_VERSION=1.0.3
 
 RUN cd /usr/src \
-      && curl https://chromium.googlesource.com/webm/libwebp/+archive/refs/heads/0.6.1.tar.gz -o libwebp.tar.gz \
-      && mkdir -p libwebp-$WEBP_VERSION \
-      && tar -xvf libwebp.tar.gz -C libwebp-$WEBP_VERSION \
+      && wget https://github.com/webmproject/libwebp/archive/v$WEBP_VERSION.tar.gz \
+      && tar -xvf v$WEBP_VERSION.tar.gz \
       && cd libwebp-$WEBP_VERSION \
       && ./autogen.sh \
-      && ./configure --prefix=/usr/src/vips \
+      && ./configure --prefix=/usr/src/vips --enable-libwebpmux --enable-libwebpdemux --enable-libwebpdecoder \
       && make \
       && make install
 
@@ -104,6 +103,7 @@ RUN cd /usr/src \
       && wget http://www.imagemagick.org/download/releases/ImageMagick-6.9.10-33.zip \
       && unzip ImageMagick-6.9.10-33.zip \
       && cd ImageMagick-6.9.10-33 \
+      && export PKG_CONFIG_PATH=/usr/src/vips/lib/pkgconfig \
       && ./configure --prefix=/usr/src/vips --with-gcc-arch \
       && make \
       && make install
