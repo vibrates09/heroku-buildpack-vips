@@ -1,6 +1,6 @@
 FROM heroku/heroku:18
 
-ARG VIPS_VERSION
+ENV VIPS_VERSION=8.8.1
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -79,10 +79,19 @@ RUN cd /usr/src \
       && make \
       && make install
 
-ARG WEBP_VERSION=0.6.0
+RUN cd /usr/src \
+      && wget https://github.com/strukturag/libheif/releases/download/v1.5.1/libheif-1.5.1.tar.gz \
+      && tar -xvf libheif-1.5.1.tar.gz \
+      && cd libheif-1.5.1 \
+      && ./autogen.sh \
+      && ./configure --prefix=/usr/src/vips \
+      && make \
+      && make install
+
+ARG WEBP_VERSION=0.6.1
 
 RUN cd /usr/src \
-      && curl https://chromium.googlesource.com/webm/libwebp/+archive/refs/heads/$WEBP_VERSION.tar.gz -o libwebp.tar.gz \
+      && curl https://chromium.googlesource.com/webm/libwebp/+archive/refs/heads/0.6.1.tar.gz -o libwebp.tar.gz \
       && mkdir -p libwebp-$WEBP_VERSION \
       && tar -xvf libwebp.tar.gz -C libwebp-$WEBP_VERSION \
       && cd libwebp-$WEBP_VERSION \
@@ -92,9 +101,9 @@ RUN cd /usr/src \
       && make install
 
 RUN cd /usr/src \
-      && wget http://www.imagemagick.org/download/releases/ImageMagick-6.9.10-64.zip \
-      && unzip ImageMagick-6.9.10-64.zip \
-      && cd ImageMagick-6.9.10-64 \
+      && wget http://www.imagemagick.org/download/releases/ImageMagick-6.9.10-33.zip \
+      && unzip ImageMagick-6.9.10-33.zip \
+      && cd ImageMagick-6.9.10-33 \
       && ./configure --prefix=/usr/src/vips --with-gcc-arch \
       && make \
       && make install
