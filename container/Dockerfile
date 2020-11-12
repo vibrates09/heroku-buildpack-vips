@@ -1,6 +1,6 @@
 FROM heroku/heroku:18
 
-ENV VIPS_VERSION=8.8.2
+ENV VIPS_VERSION=8.10.2
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y \
       libmount-dev \
       libffi-dev \
+      glib-2.0-dev \
       libexpat-dev \
       librsvg2-dev \
       libpng-dev \
@@ -37,31 +38,23 @@ RUN apt-get update && apt-get install -y \
       libxml2-dev \
       libfftw3-dev
 
-RUN cd /usr/src \
-      && curl -L http://ftp.gnome.org/pub/gnome/sources/glib/2.54/glib-2.54.1.tar.xz -o glib.tar.xz \
-      && tar -xvf glib.tar.xz \
-      && cd glib-2.54.1 \
-      && ./configure --prefix=/usr/src/vips \
-      && make \
-      && make install
-
 ARG GIFLIB_VERSION=5.1.4
 ARG GIFLIB_URL=http://downloads.sourceforge.net/project/giflib
 
 RUN cd /usr/src \
-      && wget ${GIFLIB_URL}/giflib-$GIFLIB_VERSION.tar.bz2 \
-      && tar xf giflib-${GIFLIB_VERSION}.tar.bz2 \
-      && cd giflib-${GIFLIB_VERSION} \
-      && ./configure --prefix=/usr/src/vips \
-      && make \
-      && make install
+	&& wget ${GIFLIB_URL}/giflib-$GIFLIB_VERSION.tar.bz2 \
+	&& tar xf giflib-${GIFLIB_VERSION}.tar.bz2 \
+	&& cd giflib-${GIFLIB_VERSION} \
+	&& ./configure --prefix=/usr/src/vips \
+	&& make \
+	&& make install
 
 ARG ORC_VERSION=0.4.28
-ARG ORC_URL=http://cgit.freedesktop.org/gstreamer/orc/snapshot
+ARG ORC_URL=https://gstreamer.freedesktop.org/src/orc
 
 RUN cd /usr/src \
-      && wget ${ORC_URL}/orc-$ORC_VERSION.tar.gz \
-      && tar xf orc-${ORC_VERSION}.tar.gz \
+      && wget ${ORC_URL}/orc-$ORC_VERSION.tar.xz \
+      && tar xf orc-${ORC_VERSION}.tar.xz \
       && cd orc-${ORC_VERSION} \
       && ./autogen.sh \
       && ./configure --prefix=/usr/src/vips --disable-gtk-doc \
@@ -79,16 +72,19 @@ RUN cd /usr/src \
       && make \
       && make install
 
+ARG HEIF_VERSION=1.8.0
+ARG HEIF_URL=https://github.com/strukturag/libheif/releases/download
+
 RUN cd /usr/src \
-      && wget https://github.com/strukturag/libheif/releases/download/v1.5.1/libheif-1.5.1.tar.gz \
-      && tar -xvf libheif-1.5.1.tar.gz \
-      && cd libheif-1.5.1 \
+      && wget ${HEIF_URL}/v${HEIF_VERSION}/libheif-${HEIF_VERSION}.tar.gz \
+      && tar xf libheif-${HEIF_VERSION}.tar.gz \
+      && cd libheif-${HEIF_VERSION} \
       && ./autogen.sh \
       && ./configure --prefix=/usr/src/vips \
       && make \
       && make install
 
-ARG WEBP_VERSION=1.0.3
+ARG WEBP_VERSION=1.1.0
 
 RUN cd /usr/src \
       && wget https://github.com/webmproject/libwebp/archive/v$WEBP_VERSION.tar.gz \
@@ -100,9 +96,9 @@ RUN cd /usr/src \
       && make install
 
 RUN cd /usr/src \
-      && wget http://www.imagemagick.org/download/releases/ImageMagick-6.9.10-33.zip \
-      && unzip ImageMagick-6.9.10-33.zip \
-      && cd ImageMagick-6.9.10-33 \
+      && wget http://www.imagemagick.org/download/releases/ImageMagick-6.9.11-35.zip \
+      && unzip ImageMagick-6.9.11-35.zip \
+      && cd ImageMagick-6.9.11-35 \
       && export PKG_CONFIG_PATH=/usr/src/vips/lib/pkgconfig \
       && ./configure --prefix=/usr/src/vips --with-gcc-arch \
       && make \
