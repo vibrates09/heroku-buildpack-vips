@@ -36,7 +36,8 @@ RUN apt-get update && apt-get install -y \
       libexif-dev \
       liblcms2-dev \
       libxml2-dev \
-      libfftw3-dev
+      libfftw3-dev \
+      libde265-dev
 
 ARG GIFLIB_VERSION=5.1.4
 ARG GIFLIB_URL=http://downloads.sourceforge.net/project/giflib
@@ -72,7 +73,7 @@ RUN cd /usr/src \
       && make \
       && make install
 
-ARG HEIF_VERSION=1.8.0
+ARG HEIF_VERSION=1.9.1
 ARG HEIF_URL=https://github.com/strukturag/libheif/releases/download
 
 RUN cd /usr/src \
