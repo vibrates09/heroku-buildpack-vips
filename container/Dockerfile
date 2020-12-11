@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y \
       liblcms2-dev \
       libxml2-dev \
       libfftw3-dev \
-      libde265-dev
+      libheif-dev
 
 ARG GIFLIB_VERSION=5.1.4
 ARG GIFLIB_URL=http://downloads.sourceforge.net/project/giflib
@@ -73,6 +73,15 @@ RUN cd /usr/src \
       && make \
       && make install
 
+RUN cd /usr/src \
+      && wget https://github.com/strukturag/libde265/releases/download/v1.0.3/libde265-1.0.3.tar.gz \
+      && tar xf libde265-1.0.3.tar.gz \
+      && cd libde265-1.0.3 \
+      && ./autogen.sh \
+      && ./configure --prefix=/usr/src/vips \
+      && make \
+      && make install
+
 ARG HEIF_VERSION=1.9.1
 ARG HEIF_URL=https://github.com/strukturag/libheif/releases/download
 
@@ -101,7 +110,7 @@ RUN cd /usr/src \
       && unzip ImageMagick-6.9.11-35.zip \
       && cd ImageMagick-6.9.11-35 \
       && export PKG_CONFIG_PATH=/usr/src/vips/lib/pkgconfig \
-      && ./configure --prefix=/usr/src/vips --with-gcc-arch \
+      && ./configure --with-heic=yes --prefix=/usr/src/vips --with-gcc-arch \
       && make \
       && make install
 
