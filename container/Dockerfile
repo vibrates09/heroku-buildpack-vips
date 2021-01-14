@@ -73,10 +73,13 @@ RUN cd /usr/src \
       && make \
       && make install
 
+ARG DE265_VERSION=1.0.8
+ARG DE265_URL=https://github.com/strukturag/libde265/releases/download
+
 RUN cd /usr/src \
-      && wget https://github.com/strukturag/libde265/releases/download/v1.0.3/libde265-1.0.3.tar.gz \
-      && tar xf libde265-1.0.3.tar.gz \
-      && cd libde265-1.0.3 \
+      && wget ${DE265_URL}/v${DE265_VERSION}/libde265-${DE265_VERSION}.tar.gz \
+      && tar xf libde265-${DE265_VERSION}.tar.gz \
+      && cd libde265-${DE265_VERSION} \
       && ./autogen.sh \
       && ./configure --prefix=/usr/src/vips \
       && make \
